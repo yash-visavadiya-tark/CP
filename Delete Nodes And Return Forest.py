@@ -23,26 +23,25 @@ class Solution:
         if not root:
             return
 
-        if root.left and root.left.val in to_delete:
-            if root.left.left and root.left.left.val not in to_delete:
-                forest.append(root.left.left)
-            if root.left.right and root.left.right.val not in to_delete:
-                forest.append(root.left.right)
-            self.helper(root.left, forest, to_delete)
+        if self.is_in_to_delete_then_process(root.left, forest, to_delete):
             root.left = None
-
-        if root.right and root.right.val in to_delete:
-            if root.right.left and root.right.left.val not in to_delete:
-                forest.append(root.right.left)
-            if root.right.right and root.right.right.val not in to_delete:
-                forest.append(root.right.right)
-            self.helper(root.right, forest, to_delete)
-            root.right = None
-
-        if root.left:
+        else:
             self.helper(root.left, forest, to_delete)
-        if root.right:
+
+        if self.is_in_to_delete_then_process(root.right, forest, to_delete):
+            root.right = None
+        else:
             self.helper(root.right, forest, to_delete)
+
+    def is_in_to_delete_then_process(self, node, forest, to_delete):
+        if node and node.val in to_delete:
+            if node.left and node.left.val not in to_delete:
+                forest.append(node.left)
+            if node.right and node.right.val not in to_delete:
+                forest.append(node.right)
+            self.helper(node, forest, to_delete)
+            return True
+        return False
 
 
 if __name__ == "__main__":
